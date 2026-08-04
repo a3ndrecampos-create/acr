@@ -20,17 +20,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Instalar Gradle 8.7 e gerar wrapper
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Gerar gradle-wrapper.jar
+        run: gradle wrapper --gradle-version=8.7 --distribution-type=bin
+
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v3.2.2
 
       - name: Criar local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
-
-      - name: Baixar gradle-wrapper.jar oficial
-        run: |
-          curl -fsSL "https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar" \
-            -o gradle/wrapper/gradle-wrapper.jar
-          ls -lh gradle/wrapper/
 
       - name: Dar permissão ao gradlew
         run: chmod +x gradlew
