@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema base da Activity - o visual real do app vem do Compose (ui/theme) -->
+    <style name="Theme.QrScanGera" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Tema usado durante a splash screen (androidx.core.splashscreen) -->
+    <style name="Theme.QrScanGera.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/brand_blue</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_qr_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.QrScanGera</item>
+    </style>
+</resources>
