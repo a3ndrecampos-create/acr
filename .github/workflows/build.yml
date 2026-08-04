@@ -30,11 +30,16 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build APK Debug
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace --info 2>&1
 
-      - name: Listar APKs gerados
+      - name: Listar tudo dentro de app/build
         if: always()
-        run: find . -name "*.apk" 2>/dev/null || echo "Nenhum APK encontrado"
+        run: |
+          echo "=== Estrutura de app/build ==="
+          find app/build -type f 2>/dev/null || echo "Pasta app/build não existe"
+          echo ""
+          echo "=== APKs encontrados no projeto ==="
+          find . -name "*.apk" 2>/dev/null || echo "Nenhum APK encontrado"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4.6.2
