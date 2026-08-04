@@ -173,7 +173,7 @@ fun GenerateScreen(viewModel: GenerateViewModel) {
 
         Spacer(Modifier.height(8.dp))
         OutlinedButton(onClick = { logoPickerLauncher.launch("image/*") }, modifier = Modifier.fillMaxWidth()) {
-            androidx.compose.material3.Icon(ImageIcon, contentDescription = null)
+            androidx.compose.material3.Icon(Icons.Default.ImageIcon, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text(if (state.style.logo == null) "Adicionar logo" else "Trocar logo")
         }

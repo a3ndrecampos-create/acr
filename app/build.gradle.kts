@@ -4,6 +4,13 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+configurations.all {
+    // Evita o conflito clássico do CameraX: várias libs (AdMob, Room, etc.) trazem
+    // o stub "com.google.guava:listenablefuture" enquanto o CameraX espera a classe
+    // real do Guava. Forçamos uma única implementação de ListenableFuture no classpath.
+    exclude(group = "com.google.guava", module = "listenablefuture")
+}
+
 android {
     namespace = "com.qrscangera.app"
     compileSdk = 34
@@ -67,6 +74,10 @@ dependencies {
 
     // Fontes do Google Fonts (Poppins) carregadas sob demanda
     implementation("androidx.compose.ui:ui-text-google-fonts")
+
+    // Guava real (não o stub listenablefuture) - necessário pelo CameraX (ProcessCameraProvider
+    // retorna ListenableFuture) quando outras libs do projeto também dependem de guava/listenablefuture
+    implementation("com.google.guava:guava:32.1.3-android")
 
     // Câmera
     implementation("androidx.camera:camera-core:1.3.4")
