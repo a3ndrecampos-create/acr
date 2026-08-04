@@ -26,20 +26,21 @@ jobs:
       - name: Criar local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
+      - name: Baixar gradle-wrapper.jar oficial
+        run: |
+          curl -fsSL "https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar" \
+            -o gradle/wrapper/gradle-wrapper.jar
+          ls -lh gradle/wrapper/
+
       - name: Dar permissão ao gradlew
         run: chmod +x gradlew
 
       - name: Build APK Debug
-        run: ./gradlew assembleDebug --stacktrace --info 2>&1
+        run: ./gradlew assembleDebug --stacktrace
 
-      - name: Listar tudo dentro de app/build
+      - name: Listar APKs gerados
         if: always()
-        run: |
-          echo "=== Estrutura de app/build ==="
-          find app/build -type f 2>/dev/null || echo "Pasta app/build não existe"
-          echo ""
-          echo "=== APKs encontrados no projeto ==="
-          find . -name "*.apk" 2>/dev/null || echo "Nenhum APK encontrado"
+        run: find . -name "*.apk" 2>/dev/null || echo "Nenhum APK encontrado"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4.6.2
