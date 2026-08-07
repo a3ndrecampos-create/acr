@@ -11,6 +11,12 @@ configurations.all {
     exclude(group = "com.google.guava", module = "listenablefuture")
 }
 
+// Se as variáveis de ambiente da keystore estiverem presentes (ex: no GitHub Actions),
+// o release já sai assinado automaticamente. Localmente, sem essas variáveis, o release
+// fica sem assinatura no Gradle - use o assistente "Generate Signed Bundle" do Android
+// Studio nesse caso, que assina por fora do Gradle e não é afetado por isto aqui.
+val releaseKeystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+
 android {
     namespace = "com.qrscangera.app"
     compileSdk = 34
@@ -25,10 +31,24 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (releaseKeystorePath != null) {
+            create("release") {
+                storeFile = file(releaseKeystorePath)
+                storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (releaseKeystorePath != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
         debug {
             isMinifyEnabled = false
