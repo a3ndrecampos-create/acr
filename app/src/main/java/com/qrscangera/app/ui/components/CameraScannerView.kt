@@ -1,6 +1,7 @@
 package com.qrscangera.app.ui.components
 
 import android.util.Size
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -8,6 +9,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,8 +21,12 @@ import com.google.mlkit.vision.common.InputImage
 
 /**
  * Preview de câmera em tela cheia (CameraX) já ligado ao ML Kit Barcode Scanning.
- * Chama [onQrDetected] com o conteúdo bruto assim que um QR Code é lido, e [onTorchAvailable]
- * uma vez para permitir ligar/desligar a lanterna a partir da tela chamadora.
+ * Chama [onQrDetected] com o conteúdo bruto assim que um QR Code é lido.
+ *
+ * A instância de [Camera] retornada pelo bind fica guardada em [cameraRef]: é ela que
+ * permite ligar/desligar a lanterna depois que a câmera já está rodando - sem isso, o
+ * toggle da lanterna só valeria no instante exato do bind (quase sempre "desligado"),
+ * que era o bug de "lanterna não liga".
  */
 @Composable
 fun CameraScannerView(
@@ -31,6 +37,7 @@ fun CameraScannerView(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val scanner = remember { BarcodeScanning.getClient() }
+    val cameraRef = remember { mutableStateOf<Camera?>(null) }
 
     AndroidView(
         modifier = modifier.fillMaxSize(),
@@ -74,6 +81,8 @@ fun CameraScannerView(
                     val camera = cameraProvider.bindToLifecycle(
                         lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis
                     )
+                    cameraRef.value = camera
+                    // Aplica o estado da lanterna já vigente no momento em que a câmera fica pronta
                     camera.cameraControl.enableTorch(torchOn)
                 } catch (e: Exception) {
                     // Câmera indisponível (ex: emulador sem câmera) - preview fica em branco
@@ -82,6 +91,10 @@ fun CameraScannerView(
 
             previewView
         },
-        update = { /* torchOn é reaplicado no próximo bind; simplificado para o MVP */ }
+        // Reexecutado sempre que torchOn mudar (recomposição) - é isso que faz o botão
+        // de lanterna realmente ligar/desligar depois que a câmera já está rodando.
+        update = {
+            cameraRef.value?.cameraControl?.enableTorch(torchOn)
+        }
     )
 }

@@ -27,7 +27,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.qrscangera.app.ui.screens.GenerateScreen
 import com.qrscangera.app.ui.screens.HistoryScreen
 import com.qrscangera.app.ui.screens.ScanScreen
@@ -37,6 +36,11 @@ import com.qrscangera.app.viewmodel.GenerateViewModel
 import com.qrscangera.app.viewmodel.HistoryViewModel
 import com.qrscangera.app.viewmodel.ScanViewModel
 
+/**
+ * Tela principal do app (bottom nav com as 3 abas). Quem abre por último no fluxo de
+ * inicialização: a SplashActivity.kt é o launcher e chama esta Activity ao terminar
+ * a animação padrão da Arka Cortex.
+ */
 class MainActivity : ComponentActivity() {
 
     private val scanViewModel: ScanViewModel by viewModels()
@@ -44,7 +48,6 @@ class MainActivity : ComponentActivity() {
     private val historyViewModel: HistoryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen() // API 31+ mostra a splash nativa do sistema; abaixo disso, a tela abre direto
         super.onCreate(savedInstanceState)
 
         setContent {
