@@ -72,6 +72,7 @@ object AdsManager {
      * pulando o primeiro uso do app para não irritar o usuário novo.
      */
     fun onScanCompleted(activity: Activity) {
+        if (com.qrscangera.app.billing.BillingManager.isPro.value) return // Pro não vê anúncios
         scanCountSinceLastAd++
         if (scanCountSinceLastAd >= 3) {
             scanCountSinceLastAd = 0

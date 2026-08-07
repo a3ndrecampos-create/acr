@@ -8,6 +8,16 @@ azul/roxo, dark/light mode automático, histórico local e anúncios AdMob.
 2. Deixe o Studio sincronizar o Gradle (ele mesmo gera o `gradle-wrapper.jar` que falta).
 3. Rode em um dispositivo/emulador com câmera para testar o escaneamento.
 
+## Versão Free x Pro
+- **Free**: só a aba "Escanear" funciona (leitor de QR Code), com anúncios (banner na tela
+  de upgrade + interstitial a cada 3 escaneamentos).
+- **Pro** (compra única, `qrscangera_pro_unlock`): desbloqueia "Gerar" e "Histórico" e
+  remove todos os anúncios. Implementado com Google Play Billing em `billing/BillingManager.kt`.
+- **Antes de publicar**: crie o produto de compra única no Play Console (Monetização >
+  Produtos no app) com o ID exato `qrscangera_pro_unlock` (ou troque a constante
+  `PRO_PRODUCT_ID` em `BillingManager.kt` pelo ID que você usar). Produtos de IAP só ficam
+  disponíveis para teste depois do primeiro upload do app (mesmo em teste interno).
+
 ## Antes de publicar
 - **AdMob**: troque os IDs de teste em `AndroidManifest.xml` (meta-data `APPLICATION_ID`)
   e em `utils/AdsManager.kt` (banner, interstitial, rewarded) pelos IDs reais do seu

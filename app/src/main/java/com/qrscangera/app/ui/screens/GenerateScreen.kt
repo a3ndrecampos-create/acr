@@ -38,7 +38,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.qrscangera.app.data.QrType
-import com.qrscangera.app.ui.components.BannerAdView
 import com.qrscangera.app.ui.components.QrColorPicker
 import com.qrscangera.app.ui.components.QrTypeChips
 import com.qrscangera.app.utils.ImageSaver
@@ -220,11 +219,6 @@ fun GenerateScreen(viewModel: GenerateViewModel) {
         }
 
         Spacer(Modifier.height(20.dp))
-
-        // Banner do AdMob - fixo na aba "Gerar", ANTES dos botões já renderizados acima
-        // não seria sobreposto; aqui vai ao final do conteúdo rolável.
-        BannerAdView()
-        Spacer(Modifier.height(12.dp))
     }
 }
 

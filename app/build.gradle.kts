@@ -100,6 +100,9 @@ dependencies {
     // AdMob
     implementation("com.google.android.gms:play-services-ads:23.2.0")
 
+    // Google Play Billing - compra única "Pro" (desbloqueia tudo + remove anúncios)
+    implementation("com.android.billingclient:billing-ktx:6.2.1")
+
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
