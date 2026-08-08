@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.qrscangera.app-release-74:/xml_data_extraction_rules.xml.flat",
+        "source": "com.qrscangera.app-main-75:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.qrscangera.app-release-74:/xml_file_paths.xml.flat",
+        "source": "com.qrscangera.app-main-75:/xml/file_paths.xml"
+    },
+    {
+        "merged": "com.qrscangera.app-release-74:/xml_backup_rules.xml.flat",
+        "source": "com.qrscangera.app-main-75:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.qrscangera.app-release-74:/drawable_logo_arkacortex.png.flat",
+        "source": "com.qrscangera.app-main-75:/drawable/logo_arkacortex.png"
+    },
+    {
+        "merged": "com.qrscangera.app-release-74:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.qrscangera.app-main-75:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.qrscangera.app-release-74:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.qrscangera.app-main-75:/mipmap-anydpi-v26/ic_launcher.xml"
+    }
+]
