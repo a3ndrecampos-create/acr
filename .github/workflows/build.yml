@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,35 +22,53 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      # Debug APK - sempre, serve pra testar rápido sem precisar da keystore
+      # Debug APK (flavor production) - sempre, serve pra testar rápido sem precisar da keystore
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleProductionDebug --stacktrace
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/production/debug/app-production-debug.apk
 
-      # AAB de release assinado - só roda se os secrets da keystore estiverem configurados
+      # A partir daqui só roda se a keystore estiver configurada nos secrets do repositório
       - name: Decode keystore
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        if: env.HAS_KEYSTORE == 'true'
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/release.jks"
           echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
 
-      - name: Build signed release AAB
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+      # AAB de PRODUÇÃO assinado - regra comercial real (trial de 7 dias, depois paga)
+      # É este arquivo que vai pra faixa de Produção do Play Console.
+      - name: Build signed PRODUCTION release AAB
+        if: env.HAS_KEYSTORE == 'true'
         env:
-          ANDROID_KEYSTORE_PATH: ${{ env.ANDROID_KEYSTORE_PATH }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: ./gradlew bundleRelease --stacktrace
+        run: ./gradlew bundleProductionRelease --stacktrace
 
-      - name: Upload release AAB
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+      - name: Upload production AAB
+        if: env.HAS_KEYSTORE == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-aab
-          path: app/build/outputs/bundle/release/app-release.aab
+          name: app-production-release-aab
+          path: app/build/outputs/bundle/productionRelease/app-production-release.aab
+
+      # AAB de TESTE FECHADO assinado - Premium sempre liberado, sem trial.
+      # É este arquivo que vai SÓ pra faixa de Teste fechado do Play Console - NUNCA pra Produção.
+      - name: Build signed CLOSED TESTING release AAB
+        if: env.HAS_KEYSTORE == 'true'
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew bundleClosedTestingRelease --stacktrace
+
+      - name: Upload closed testing AAB
+        if: env.HAS_KEYSTORE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-closedtesting-release-aab
+          path: app/build/outputs/bundle/closedTestingRelease/app-closedTesting-release.aab
