@@ -88,7 +88,7 @@ object BillingManager {
 
         billingClient?.queryProductDetailsAsync(params) { billingResult, result ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                result.productDetailsList.forEach { details -> productDetailsById[details.productId] = details }
+                result.forEach { details -> productDetailsById[details.productId] = details }
 
                 productDetailsById[PRO_LIFETIME_PRODUCT_ID]?.let {
                     _lifetimePriceLabel.value = it.oneTimePurchaseOfferDetails?.formattedPrice
