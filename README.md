@@ -18,48 +18,6 @@ azul/roxo, dark/light mode automático, histórico local e anúncios AdMob.
   `PRO_PRODUCT_ID` em `BillingManager.kt` pelo ID que você usar). Produtos de IAP só ficam
   disponíveis para teste depois do primeiro upload do app (mesmo em teste interno).
 
-## Lançamento 100% grátis (fase atual)
-`LaunchModeManager.FREE_LAUNCH_MODE = true` está ligado: todo mundo tem acesso completo
-(Gerar + Histórico) e **sem anúncios**, sem trial, sem paywall - é um app free normal por
-enquanto. Quem instalar nessa fase fica marcado como "early adopter" no aparelho e
-continua com tudo liberado pra sempre, mesmo depois.
-
-**Quando for lançar a versão paga**: abra `billing/LaunchModeManager.kt`, troque
-`FREE_LAUNCH_MODE` pra `false`, suba uma nova versão (`versionCode` maior). A partir
-daí: quem já tinha o app antes continua liberado (early adopter); quem instalar depois
-passa pelo trial de 7 dias e, depois, pelo paywall normal (mensal/vitalício + anúncios).
-Não precisa mexer em mais nada - o resto do sistema (trial, compra, anúncios) já está
-pronto e só "acorda" quando esse interruptor virar false.
-
-## Teste fechado x Produção (variantes de build)
-O app tem duas variantes ("product flavors"), escolhidas na hora de compilar - não é uma
-configuração que muda sozinha ou que o usuário consegue alterar:
-
-- **`production`**: regra comercial real. Usuário instala grátis, ganha 7 dias de acesso
-  Premium (Gerar + Histórico + sem anúncios), depois disso essas telas voltam a pedir
-  assinatura/compra. É o que vai pra faixa de **Produção** do Play Console.
-- **`closedTesting`**: Premium sempre liberado, sem trial, sem expirar - pra quem está
-  testando o app na faixa de **Teste fechado** do Play Console conseguir ver 100% das
-  telas. **Nunca envie esta variante pra Produção.**
-
-Cada variante gera um `.aab` com nome diferente (`app-production-release.aab` e
-`app-closedTesting-release.aab`), então não tem como confundir os dois arquivos na hora
-de subir no Play Console. Localmente, pra gerar cada uma: `./gradlew bundleProductionRelease`
-ou `./gradlew bundleClosedTestingRelease` (o Android Studio também deixa escolher a
-"Build Variant" numa aba própria).
-
-**Limitação importante**: o Android não tem uma forma nativa/confiável de o app detectar
-sozinho "este instalador específico é um testador do Play Console" em tempo real - por
-isso a separação é feita em tempo de compilação (build flavor), não em tempo de execução.
-Isso segue exatamente a recomendação da própria Google para esse cenário.
-
-Onde cada regra fica implementada, se precisar mexer:
-- `billing/TrialManager.kt` - conta os 7 dias (guardado localmente no aparelho)
-- `billing/PremiumAccessManager.kt` - combina teste fechado + trial + compra real numa
-  única resposta (`hasAccess`) que o resto do app usa
-- `billing/BillingManager.kt` - só cuida da compra real (Google Play Billing), não sabe
-  nada sobre trial ou teste fechado
-
 ## Antes de publicar
 - **AdMob**: troque os IDs de teste em `AndroidManifest.xml` (meta-data `APPLICATION_ID`)
   e em `utils/AdsManager.kt` (banner, interstitial, rewarded) pelos IDs reais do seu
