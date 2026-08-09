@@ -86,9 +86,9 @@ object BillingManager {
 
         val params = QueryProductDetailsParams.newBuilder().setProductList(products).build()
 
-        billingClient?.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
+        billingClient?.queryProductDetailsAsync(params) { billingResult, result ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                productDetailsList.forEach { details -> productDetailsById[details.productId] = details }
+                result.productDetailsList.forEach { details -> productDetailsById[details.productId] = details }
 
                 productDetailsById[PRO_LIFETIME_PRODUCT_ID]?.let {
                     _lifetimePriceLabel.value = it.oneTimePurchaseOfferDetails?.formattedPrice

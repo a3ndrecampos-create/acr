@@ -42,6 +42,23 @@ versionName = "1.0.2"
         }
     }
 
+    // Separação segura entre "estou testando" e "isto é produção", garantida em tempo de
+    // compilação (não é uma variável que dá pra mudar depois, é literalmente um build
+    // diferente). A variante "closedTesting" SÓ deve ser enviada à faixa de teste fechado
+    // do Play Console; "production" é a que vai pra faixa de Produção.
+    flavorDimensions += "environment"
+    productFlavors {
+        create("production") {
+            dimension = "environment"
+            buildConfigField("boolean", "IS_CLOSED_TESTING", "false")
+        }
+        create("closedTesting") {
+            dimension = "environment"
+            buildConfigField("boolean", "IS_CLOSED_TESTING", "true")
+            versionNameSuffix = "-teste-fechado"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -65,6 +82,7 @@ versionName = "1.0.2"
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"

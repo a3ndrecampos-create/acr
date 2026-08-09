@@ -1,48 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Canto superior esquerdo -->
-    <path
-        android:pathData="M30,30h14v14h-14z M34,34v6h6v-6z"
-        android:fillColor="#FFFFFF"
-        android:fillType="evenOdd" />
-    <path
-        android:pathData="M26,26h22v22h-22z M30,30v14h14v-14z"
-        android:fillColor="#FFFFFF"
-        android:fillType="evenOdd" />
-
-    <!-- Canto superior direito -->
-    <path
-        android:pathData="M60,26h22v22h-22z M64,30v14h14v-14z"
-        android:fillColor="#FFFFFF"
-        android:fillType="evenOdd" />
-    <path
-        android:pathData="M68,34h6v6h-6z"
-        android:fillColor="#FFFFFF" />
-
-    <!-- Canto inferior esquerdo -->
-    <path
-        android:pathData="M26,60h22v22h-22z M30,64v14h14v-14z"
-        android:fillColor="#FFFFFF"
-        android:fillType="evenOdd" />
-    <path
-        android:pathData="M34,68h6v6h-6z"
-        android:fillColor="#FFFFFF" />
-
-    <!-- Pontos soltos no meio, lembrando o miolo de um QR Code -->
-    <path
-        android:pathData="M64,64h8v8h-8z"
-        android:fillColor="#FFFFFF" />
-    <path
-        android:pathData="M76,64h6v6h-6z"
-        android:fillColor="#FFFFFF" />
-    <path
-        android:pathData="M64,76h6v6h-6z"
-        android:fillColor="#FFFFFF" />
-    <path
-        android:pathData="M76,76h6v6h-6z"
-        android:fillColor="#FFFFFF" />
+    <group android:scaleX="2.6" android:scaleY="2.6" android:translateX="24" android:translateY="24">
+        <path android:fillColor="#FFFFFFFF" android:pathData="M3,3h7v7h-7z M5,5v3h3v-3z" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M14,3h7v7h-7z M16,5v3h3v-3z" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M3,14h7v7h-7z M5,16v3h3v-3z" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M14,14h3v3h-3z" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M18,14h3v3h-3z" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M14,18h3v3h-3z" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M18,18h3v3h-3z" />
+    </group>
 </vector>
