@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        Padrão Arka Cortex: sempre Theme.AppCompat.DayNight.NoActionBar como base,
+        nunca android:Theme.Material.* (ver memória "arka-cortex-splash-padrao").
+        O visual real das telas do app vem do Compose (ui/theme), este tema aqui é
+        só o "casco" da Activity.
+    -->
+    <style name="Theme.QrScanGera" parent="Theme.AppCompat.DayNight.NoActionBar" />
+
+    <!-- Tema da SplashActivity (launcher do app) - fundo já na cor certa evita "flash" branco -->
+    <style name="Theme.QrScanGera.Splash" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/arka_splash_background</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
