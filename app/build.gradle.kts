@@ -131,9 +131,11 @@ dependencies {
     implementation("com.google.zxing:core:3.5.3")
 
     // Persistência - Room (histórico)
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
+    // v2.8.2: a 2.6.1 tem um bug conhecido de incompatibilidade com KSP2 (usado a partir
+    // do Kotlin 2.0+), corrigido a partir da 2.7.0.
+    implementation("androidx.room:room-runtime:2.8.2")
+    implementation("androidx.room:room-ktx:2.8.2")
+    ksp("androidx.room:room-compiler:2.8.2")
 
     // AdMob
     implementation("com.google.android.gms:play-services-ads:23.2.0")
