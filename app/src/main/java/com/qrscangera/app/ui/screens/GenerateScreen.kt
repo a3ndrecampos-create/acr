@@ -42,7 +42,6 @@ import com.qrscangera.app.ui.components.QrColorPicker
 import com.qrscangera.app.ui.components.QrTypeChips
 import com.qrscangera.app.utils.ImageSaver
 import com.qrscangera.app.viewmodel.GenerateViewModel
-import com.qrscangera.app.viewmodel.PixFields
 
 @Composable
 fun GenerateScreen(viewModel: GenerateViewModel) {
@@ -97,29 +96,6 @@ fun GenerateScreen(viewModel: GenerateViewModel) {
                 OutlinedTextField(
                     value = state.contactPhone, onValueChange = viewModel::updateContactPhone,
                     label = { Text("Telefone") }, modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            QrType.PIX -> Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                OutlinedTextField(
-                    value = state.pix.chave,
-                    onValueChange = { viewModel.updatePix(state.pix.copy(chave = it)) },
-                    label = { Text("Chave Pix") }, modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = state.pix.nome,
-                    onValueChange = { viewModel.updatePix(state.pix.copy(nome = it)) },
-                    label = { Text("Nome do recebedor") }, modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = state.pix.cidade,
-                    onValueChange = { viewModel.updatePix(state.pix.copy(cidade = it)) },
-                    label = { Text("Cidade") }, modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = state.pix.valor,
-                    onValueChange = { viewModel.updatePix(state.pix.copy(valor = it)) },
-                    label = { Text("Valor (opcional)") }, modifier = Modifier.fillMaxWidth()
                 )
             }
         }

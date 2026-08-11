@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.qrscangera.app.data.QrType
 
-private val ORDER = listOf(QrType.TEXT, QrType.LINK, QrType.WIFI, QrType.CONTACT, QrType.PIX)
+// Pix não entra aqui: a criação de QR Code Pix foi removida (estava com erro). A leitura
+// de QR Codes Pix já existentes continua funcionando normalmente (ver QrType.detect).
+private val ORDER = listOf(QrType.TEXT, QrType.LINK, QrType.WIFI, QrType.CONTACT)
 
 private fun label(type: QrType) = when (type) {
     QrType.TEXT -> "Texto"
@@ -21,7 +23,7 @@ private fun label(type: QrType) = when (type) {
     QrType.PIX -> "Pix"
 }
 
-/** Seletor rápido de tipo de conteúdo a gerar, com chips horizontais (Texto | Link | Wi-Fi | Contato | Pix). */
+/** Seletor rápido de tipo de conteúdo a gerar, com chips horizontais (Texto | Link | Wi-Fi | Contato). */
 @Composable
 fun QrTypeChips(selected: QrType, onSelect: (QrType) -> Unit, modifier: Modifier = Modifier) {
     LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {

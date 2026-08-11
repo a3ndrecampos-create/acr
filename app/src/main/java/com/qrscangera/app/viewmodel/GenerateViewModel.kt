@@ -8,7 +8,6 @@ import com.qrscangera.app.QrScanGeraApp
 import com.qrscangera.app.data.HistoryEntity
 import com.qrscangera.app.data.HistorySource
 import com.qrscangera.app.data.QrType
-import com.qrscangera.app.utils.PixPayloadBuilder
 import com.qrscangera.app.utils.QrCodeGenerator
 import com.qrscangera.app.utils.QrStyle
 import kotlinx.coroutines.Dispatchers
@@ -20,15 +19,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/** Campos específicos preenchidos quando o tipo escolhido é Pix. */
-data class PixFields(val chave: String = "", val nome: String = "", val cidade: String = "", val valor: String = "")
-
 data class GenerateUiState(
     val selectedType: QrType = QrType.TEXT,
     val rawText: String = "",          // usado para Texto, Link, Wi-Fi (SSID), Contato (nome)
     val wifiPassword: String = "",
     val contactPhone: String = "",
-    val pix: PixFields = PixFields(),
     val style: QrStyle = QrStyle(),
     val bitmap: Bitmap? = null,
     val hasContent: Boolean = false
@@ -59,11 +54,6 @@ class GenerateViewModel(app: Application) : AndroidViewModel(app) {
 
     fun updateContactPhone(text: String) {
         _uiState.update { it.copy(contactPhone = text) }
-        regenerateDebounced()
-    }
-
-    fun updatePix(pix: PixFields) {
-        _uiState.update { it.copy(pix = pix) }
         regenerateDebounced()
     }
 
@@ -108,16 +98,7 @@ class GenerateViewModel(app: Application) : AndroidViewModel(app) {
                 append("END:VCARD")
             }
         }
-        QrType.PIX -> {
-            val p = state.pix
-            if (p.chave.isBlank() || p.nome.isBlank() || p.cidade.isBlank()) null
-            else PixPayloadBuilder.build(
-                chave = p.chave.trim(),
-                nomeRecebedor = p.nome,
-                cidade = p.cidade,
-                valor = p.valor.replace(",", ".").toDoubleOrNull()
-            )
-        }
+        QrType.PIX -> null // geração de Pix removida (estava com erro); a leitura/scanner ainda reconhece esse tipo normalmente
     }
 
     private fun escape(value: String) = value.replace(";", "\\;").replace(":", "\\:")

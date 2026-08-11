@@ -19,12 +19,12 @@ val releaseKeystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
 
 android {
     namespace = "com.qrscangera.app"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.qrscangera.app"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -139,7 +139,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-ads:23.2.0")
 
     // Google Play Billing - compra única "Pro" (desbloqueia tudo + remove anúncios)
-    implementation("com.android.billingclient:billing-ktx:6.2.1")
+    // v8.3.0: exigência do Google Play a partir de 31/08/2026 é 8.0.0 ou superior.
+    implementation("com.android.billingclient:billing-ktx:8.3.0")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")

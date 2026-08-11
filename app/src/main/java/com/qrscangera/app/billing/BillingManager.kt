@@ -7,6 +7,7 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
@@ -56,7 +57,10 @@ object BillingManager {
 
         billingClient = BillingClient.newBuilder(context)
             .setListener(purchasesListener)
-            .enablePendingPurchases()
+            // Billing Library 8+ removeu o enablePendingPurchases() sem parâmetros;
+            // agora exige declarar explicitamente para quais tipos de produto habilitar
+            // (mesmo comportamento de antes, só que explícito).
+            .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
             .build()
 
         billingClient?.startConnection(object : BillingClientStateListener {
@@ -88,7 +92,10 @@ object BillingManager {
 
         billingClient?.queryProductDetailsAsync(params) { billingResult, result ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                result.forEach { details -> productDetailsById[details.productId] = details }
+                // Billing Library 8+ mudou esse callback de novo: agora vem um objeto
+                // QueryProductDetailsResult (com productDetailsList + unfetchedProductList),
+                // não mais a lista direto como era até a v7.
+                result.productDetailsList.forEach { details -> productDetailsById[details.productId] = details }
 
                 productDetailsById[PRO_LIFETIME_PRODUCT_ID]?.let {
                     _lifetimePriceLabel.value = it.oneTimePurchaseOfferDetails?.formattedPrice
