@@ -9,6 +9,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,11 +17,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
+import com.qrscangera.app.utils.ZxingDecoder
 
 /**
- * Preview de câmera em tela cheia (CameraX) já ligado ao ML Kit Barcode Scanning.
+ * Preview de câmera em tela cheia (CameraX) já ligado à leitura de QR/barcode via ZXing.
  * Chama [onQrDetected] com o conteúdo bruto assim que um QR Code é lido.
  *
  * A instância de [Camera] retornada pelo bind fica guardada em [cameraRef]: é ela que
@@ -36,8 +36,15 @@ fun CameraScannerView(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val scanner = remember { BarcodeScanning.getClient() }
     val cameraRef = remember { mutableStateOf<Camera?>(null) }
+    // Decodificação roda numa thread própria: o ZXing decodifica de forma síncrona
+    // (diferente do ML Kit, que era assíncrono por padrão), então rodar na thread
+    // principal travaria o preview da câmera.
+    val analysisExecutor = remember { java.util.concurrent.Executors.newSingleThreadExecutor() }
+
+    DisposableEffect(Unit) {
+        onDispose { analysisExecutor.shutdown() }
+    }
 
     AndroidView(
         modifier = modifier.fillMaxSize(),
@@ -58,22 +65,15 @@ fun CameraScannerView(
                     .build()
 
                 var handled = false
-                analysis.setAnalyzer(ContextCompat.getMainExecutor(ctx)) { imageProxy ->
-                    val mediaImage = imageProxy.image
-                    if (mediaImage != null && !handled) {
-                        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-                        scanner.process(image)
-                            .addOnSuccessListener { barcodes ->
-                                val value = barcodes.firstOrNull()?.rawValue
-                                if (value != null && !handled) {
-                                    handled = true
-                                    onQrDetected(value)
-                                }
-                            }
-                            .addOnCompleteListener { imageProxy.close() }
-                    } else {
-                        imageProxy.close()
+                analysis.setAnalyzer(analysisExecutor) { imageProxy ->
+                    if (!handled) {
+                        val value = ZxingDecoder.decode(imageProxy)
+                        if (value != null && !handled) {
+                            handled = true
+                            ContextCompat.getMainExecutor(ctx).execute { onQrDetected(value) }
+                        }
                     }
+                    imageProxy.close()
                 }
 
                 try {

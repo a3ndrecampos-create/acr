@@ -19,13 +19,12 @@ val releaseKeystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
 
 android {
     namespace = "com.qrscangera.app"
-compileSdk = 36
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.qrscangera.app"
         minSdk = 26
-<<<<<<< HEAD
-       targetSdk = 36
+        targetSdk = 36
         versionCode = 16
         versionName = "1.8.0"
 
@@ -119,16 +118,18 @@ dependencies {
     // retorna ListenableFuture) quando outras libs do projeto também dependem de guava/listenablefuture
     implementation("com.google.guava:guava:32.1.3-android")
 
-    // Câmera
-    implementation("androidx.camera:camera-core:1.3.4")
-    implementation("androidx.camera:camera-camera2:1.3.4")
-    implementation("androidx.camera:camera-lifecycle:1.3.4")
-    implementation("androidx.camera:camera-view:1.3.4")
+    // Câmera - v1.5.1 corrige o alinhamento de 16KB do libimage_processing_util_jni.so
+    // (exigência do Google Play; versões anteriores a 1.4.x tinham esse problema)
+    implementation("androidx.camera:camera-core:1.5.1")
+    implementation("androidx.camera:camera-camera2:1.5.1")
+    implementation("androidx.camera:camera-lifecycle:1.5.1")
+    implementation("androidx.camera:camera-view:1.5.1")
 
-    // Leitura de QR/Barcode - ML Kit
-    implementation("com.google.mlkit:barcode-scanning:17.3.0")
-
-    // Geração de QR Code - ZXing (core apenas, renderização é manual)
+    // Leitura de QR/Barcode - ZXing (mesma biblioteca já usada pra gerar QR Code).
+    // Antes usava com.google.mlkit:barcode-scanning, mas a biblioteca nativa dele
+    // (libbarhopper_v3.so) segue incompatível com a exigência de 16KB do Google Play
+    // e o Google ainda não corrigiu isso em nenhuma versão publicada. ZXing é 100%
+    // Java/Kotlin, sem biblioteca nativa - não tem esse problema.
     implementation("com.google.zxing:core:3.5.3")
 
     // Persistência - Room (histórico)

@@ -60,6 +60,25 @@ Onde cada regra fica implementada, se precisar mexer:
 - `billing/BillingManager.kt` - só cuida da compra real (Google Play Billing), não sabe
   nada sobre trial ou teste fechado
 
+## Requisitos atuais do Google Play (correção aplicada)
+- `compileSdk`/`targetSdk` `36`, AGP `8.13.0`, Gradle `8.13` - exigência do Play a partir
+  de 31/08/2026.
+- Google Play Billing atualizado pra `8.3.0` (exigência: 8.0.0 ou superior). A API mudou
+  de novo nessa versão: `enablePendingPurchases()` agora exige `PendingPurchasesParams`, e
+  `queryProductDetailsAsync` volta a devolver um objeto (`QueryProductDetailsResult.productDetailsList`)
+  em vez da lista direto.
+- **Leitor de QR Code trocado de ML Kit pra ZXing** (`utils/ZxingDecoder.kt`): o Google Play
+  passou a exigir compatibilidade com paginação de memória de 16KB, e a biblioteca nativa do
+  ML Kit (`libbarhopper_v3.so`) segue incompatível, sem correção publicada pelo Google até
+  agora. ZXing é 100% Java/Kotlin (sem biblioteca nativa), então não tem esse problema - e o
+  app já usava ZXing pra *gerar* QR Code, então não é uma dependência nova.
+- `androidx.camera:*` atualizado pra `1.5.1` (corrige o alinhamento de 16KB do
+  `libimage_processing_util_jni.so`, usado internamente pela câmera).
+- `versionCode` subiu pra `10` porque os códigos 7 e 9 já tinham sido usados em uploads
+  anteriores no Play Console (um deles ficou "oculto" por isso - reenviar com um código novo
+  resolve; se acontecer de novo, é sinal de que subiu mais de um artefato com códigos
+  diferentes na mesma versão).
+
 ## Antes de publicar
 - **AdMob**: troque os IDs de teste em `AndroidManifest.xml` (meta-data `APPLICATION_ID`)
   e em `utils/AdsManager.kt` (banner, interstitial, rewarded) pelos IDs reais do seu

@@ -30,8 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
 import com.qrscangera.app.R
 import com.qrscangera.app.ui.components.CameraScannerView
 import com.qrscangera.app.ui.components.ResultBottomSheet
@@ -65,9 +63,9 @@ fun ScanScreen(viewModel: ScanViewModel) {
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             try {
-                val image = InputImage.fromFilePath(context, uri)
-                BarcodeScanning.getClient().process(image).addOnSuccessListener { barcodes ->
-                    barcodes.firstOrNull()?.rawValue?.let { viewModel.onQrDetected(it) }
+                val bitmap = android.graphics.BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
+                if (bitmap != null) {
+                    com.qrscangera.app.utils.ZxingDecoder.decode(bitmap)?.let { viewModel.onQrDetected(it) }
                 }
             } catch (e: Exception) { /* imagem inválida - ignora */ }
         }
