@@ -19,14 +19,15 @@ val releaseKeystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
 
 android {
     namespace = "com.qrscangera.app"
-    compileSdk = 36
+compileSdk = 36
 
     defaultConfig {
         applicationId = "com.qrscangera.app"
         minSdk = 26
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+<<<<<<< HEAD
+       targetSdk = 36
+        versionCode = 16
+        versionName = "1.8.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
