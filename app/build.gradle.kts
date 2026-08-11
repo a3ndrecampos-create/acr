@@ -25,7 +25,7 @@ android {
         applicationId = "com.qrscangera.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 7.2
+        versionCode = 8
         versionName = "1.7.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
