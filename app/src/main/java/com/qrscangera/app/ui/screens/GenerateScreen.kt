@@ -98,6 +98,11 @@ fun GenerateScreen(viewModel: GenerateViewModel) {
                     label = { Text("Telefone") }, modifier = Modifier.fillMaxWidth()
                 )
             }
+
+            // Geração de Pix foi removida (estava com erro); QrType.PIX ainda existe só
+            // para a leitura/scanner reconhecer o tipo, então esse branch nunca é
+            // alcançado aqui (Pix não aparece mais nos chips de seleção acima).
+            QrType.PIX -> {}
         }
 
         Spacer(Modifier.height(20.dp))
