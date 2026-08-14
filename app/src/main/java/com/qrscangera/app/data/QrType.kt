@@ -5,6 +5,7 @@ enum class QrType {
     TEXT,
     LINK,
     WIFI,
+    WHATSAPP,
     CONTACT,
     PIX;
 

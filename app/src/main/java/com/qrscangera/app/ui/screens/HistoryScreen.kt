@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Payments
@@ -147,6 +148,7 @@ private fun TypeIconBadge(type: QrType) {
     val (icon, tint) = when (type) {
         QrType.LINK -> Icons.Default.Link to MaterialTheme.colorScheme.primary
         QrType.WIFI -> Icons.Default.Wifi to MaterialTheme.colorScheme.primary
+        QrType.WHATSAPP -> Icons.Default.Chat to MaterialTheme.colorScheme.primary
         QrType.CONTACT -> Icons.Default.Contacts to MaterialTheme.colorScheme.primary
         QrType.PIX -> Icons.Default.Payments to MaterialTheme.colorScheme.primary
         QrType.TEXT -> Icons.Default.Notes to MaterialTheme.colorScheme.primary

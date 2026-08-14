@@ -99,6 +99,28 @@ fun GenerateScreen(viewModel: GenerateViewModel) {
                 )
             }
 
+            QrType.WHATSAPP -> Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    OutlinedTextField(
+                        value = state.whatsappCountryCode, onValueChange = viewModel::updateWhatsappCountryCode,
+                        label = { Text("País") }, placeholder = { Text("55") },
+                        modifier = Modifier.weight(1f)
+                    )
+                    OutlinedTextField(
+                        value = state.whatsappNumber, onValueChange = viewModel::updateWhatsappNumber,
+                        label = { Text("Número") }, placeholder = { Text("11999999999") },
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+                OutlinedTextField(
+                    value = state.whatsappMessage, onValueChange = viewModel::updateWhatsappMessage,
+                    label = { Text("Mensagem (opcional)") },
+                    placeholder = { Text("Texto que já aparece pronto na conversa") },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 2
+                )
+            }
+
             // Geração de Pix foi removida (estava com erro); QrType.PIX ainda existe só
             // para a leitura/scanner reconhecer o tipo, então esse branch nunca é
             // alcançado aqui (Pix não aparece mais nos chips de seleção acima).

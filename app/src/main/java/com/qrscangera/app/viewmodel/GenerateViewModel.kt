@@ -24,6 +24,9 @@ data class GenerateUiState(
     val rawText: String = "",          // usado para Texto, Link, Wi-Fi (SSID), Contato (nome)
     val wifiPassword: String = "",
     val contactPhone: String = "",
+    val whatsappCountryCode: String = "55",
+    val whatsappNumber: String = "",
+    val whatsappMessage: String = "",
     val style: QrStyle = QrStyle(),
     val bitmap: Bitmap? = null,
     val hasContent: Boolean = false
@@ -54,6 +57,21 @@ class GenerateViewModel(app: Application) : AndroidViewModel(app) {
 
     fun updateContactPhone(text: String) {
         _uiState.update { it.copy(contactPhone = text) }
+        regenerateDebounced()
+    }
+
+    fun updateWhatsappCountryCode(text: String) {
+        _uiState.update { it.copy(whatsappCountryCode = text) }
+        regenerateDebounced()
+    }
+
+    fun updateWhatsappNumber(text: String) {
+        _uiState.update { it.copy(whatsappNumber = text) }
+        regenerateDebounced()
+    }
+
+    fun updateWhatsappMessage(text: String) {
+        _uiState.update { it.copy(whatsappMessage = text) }
         regenerateDebounced()
     }
 
@@ -98,8 +116,22 @@ class GenerateViewModel(app: Application) : AndroidViewModel(app) {
                 append("END:VCARD")
             }
         }
+        QrType.WHATSAPP -> {
+            val country = state.whatsappCountryCode.filter { it.isDigit() }
+            val number = state.whatsappNumber.filter { it.isDigit() }
+            if (number.isBlank()) null
+            else {
+                val message = state.whatsappMessage.trim()
+                val query = if (message.isBlank()) "" else "?text=${encodeWhatsappText(message)}"
+                "https://wa.me/$country$number$query"
+            }
+        }
         QrType.PIX -> null // geração de Pix removida (estava com erro); a leitura/scanner ainda reconhece esse tipo normalmente
     }
+
+    /** Codifica o texto da mensagem pro formato de URL que o wa.me espera (espaço como %20, não como +). */
+    private fun encodeWhatsappText(text: String): String =
+        java.net.URLEncoder.encode(text, "UTF-8").replace("+", "%20")
 
     private fun escape(value: String) = value.replace(";", "\\;").replace(":", "\\:")
 

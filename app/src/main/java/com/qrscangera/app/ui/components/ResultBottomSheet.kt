@@ -130,6 +130,7 @@ private fun shareText(context: android.content.Context, text: String) {
 private fun typeLabel(type: QrType): String = when (type) {
     QrType.LINK -> "Link detectado"
     QrType.WIFI -> "Rede Wi-Fi detectada"
+    QrType.WHATSAPP -> "Link do WhatsApp detectado"
     QrType.CONTACT -> "Contato detectado"
     QrType.PIX -> "Pix detectado"
     QrType.TEXT -> "Texto detectado"

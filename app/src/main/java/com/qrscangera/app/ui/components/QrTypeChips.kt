@@ -13,17 +13,18 @@ import com.qrscangera.app.data.QrType
 
 // Pix não entra aqui: a criação de QR Code Pix foi removida (estava com erro). A leitura
 // de QR Codes Pix já existentes continua funcionando normalmente (ver QrType.detect).
-private val ORDER = listOf(QrType.TEXT, QrType.LINK, QrType.WIFI, QrType.CONTACT)
+private val ORDER = listOf(QrType.TEXT, QrType.LINK, QrType.WIFI, QrType.WHATSAPP, QrType.CONTACT)
 
 private fun label(type: QrType) = when (type) {
     QrType.TEXT -> "Texto"
     QrType.LINK -> "Link"
     QrType.WIFI -> "Wi-Fi"
+    QrType.WHATSAPP -> "WhatsApp"
     QrType.CONTACT -> "Contato"
     QrType.PIX -> "Pix"
 }
 
-/** Seletor rápido de tipo de conteúdo a gerar, com chips horizontais (Texto | Link | Wi-Fi | Contato). */
+/** Seletor rápido de tipo de conteúdo a gerar, com chips horizontais (Texto | Link | Wi-Fi | WhatsApp | Contato). */
 @Composable
 fun QrTypeChips(selected: QrType, onSelect: (QrType) -> Unit, modifier: Modifier = Modifier) {
     LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
